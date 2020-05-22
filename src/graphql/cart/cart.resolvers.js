@@ -1,59 +1,39 @@
 import { 
-  GET_CART_HIDDEN, 
-  GET_CART_ITEMS, 
-  GET_ITEM_COUNT 
-} from './cart.queries';
-
-import { addItemToCart, getCartItemCount } from './cart.utils';
-
-const resolve = (cache, query, dataKey, resolverFunction, args) => {
-  const data = cache.readQuery({ query });
-  let newData;
-
-  if(args) {
-    newData = resolverFunction(data[dataKey], ...args);
-  } else {
-    newData = resolverFunction(data[dataKey]);
-  }
-
-  cache.writeQuery({
-    query,
-    data: { [dataKey]: newData }
-  });
-
-  return newData;
-}
+  addItemToCart, 
+  clearItemFromCart, 
+  removeItemFromCart,
+  modifyCartItems,
+  modifyCartHidden
+} from './cart.utils';
 
 const cartResolvers = {
   Mutation: {
     toggleCartHidden: (_root, _args, { cache }) => {
-      const newCartHidden = resolve(
-        cache, 
-        GET_CART_HIDDEN,
-        "cartHidden",
-        cartHidden => !cartHidden
-      );
-
-      return newCartHidden;
+      return modifyCartHidden({
+        cache,
+        calcNewCartHidden: cartHidden => !cartHidden,  
+      });
     },
-    addItemToCart: (_root, { item }, { cache }) => {
-      const { cartItems } = cache.readQuery({
-        query: GET_CART_ITEMS
+    addCartItem: (_root, { item }, { cache }) => {
+      return modifyCartItems({
+        cache,
+        calcNewCartItems: addItemToCart,
+        itemToModify: item
       });
-
-      const newCartItems = addItemToCart(cartItems, item);
-
-      cache.writeQuery({
-        query: GET_ITEM_COUNT,
-        data: { itemCount: getCartItemCount(newCartItems) }
+    },
+    clearCartItem: (_root, { item }, { cache }) => {
+      return modifyCartItems({
+        cache,
+        calcNewCartItems: clearItemFromCart,
+        itemToModify: item
       });
-
-      cache.writeQuery({
-        query: GET_CART_ITEMS,
-        data: { cartItems: newCartItems }
+    },
+    removeCartItem: (_root, { item }, { cache }) => {
+      return modifyCartItems({
+        cache, 
+        calcNewCartItems: removeItemFromCart,
+        itemToModify: item
       });
-
-      return newCartItems;
     }
   }
 };

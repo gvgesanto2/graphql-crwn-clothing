@@ -1,19 +1,19 @@
 import React from 'react';
 
-import AddItemToCartMutation from '../../mutations/add-item-to-cart/add-item-to-cart.component';
+import AddCartItemMutation from '../../mutations/add-cart-item/add-cart-item.component';
 import CollectionItem from './collection-item.component';
 
 const CollectionItemContainer = props => {
   return (
-    <AddItemToCartMutation>
+    <AddCartItemMutation>
       {
-        addItemToCart => {
+        addCartItem => {
           return (
-            <CollectionItem {...props} addItem={addItemToCart} />
+            <CollectionItem {...props} addItem={addCartItem} />
           );
         }
       }
-    </AddItemToCartMutation>
+    </AddCartItemMutation>
   );
 }
 
