@@ -2,6 +2,7 @@ import {
   GET_CART_HIDDEN,
   GET_CART_ITEMS, 
   GET_ITEM_COUNT,
+  GET_TOTAL_PRICE,
 } from './cart.queries';
 
 import { modifyDataFromCache } from '../graphql.utils';
@@ -9,7 +10,6 @@ import { modifyDataFromCache } from '../graphql.utils';
 // functions related to the cartItems array manipulation
 
 export const findCartItem = (cartItems, itemToFind) => {
-  console.log("utils - findCartItems() - cartItems: ", cartItems);
   return cartItems.find(cartItem => 
     cartItem.id === itemToFind.id
   );
@@ -56,6 +56,12 @@ export const getCartItemCount = cartItems => {
     0
   );
 }
+
+export const getCartTotalPrice = cartItems => {
+  return cartItems.reduce((accQuantity, cartItem) => {
+    return accQuantity + cartItem.quantity * cartItem.price;
+  }, 0);
+}
   
 // functions related to the manipulation (modification) of the 
 // cartItems value in the Apollo cache
@@ -64,6 +70,11 @@ const updateCartItemsRelatedValues = (cache, newCartItems) => {
   cache.writeQuery({
     query: GET_ITEM_COUNT,
     data: { itemCount: getCartItemCount(newCartItems) }
+  });
+
+  cache.writeQuery({
+    query: GET_TOTAL_PRICE,
+    data: { totalPrice: getCartTotalPrice(newCartItems) }
   });
 }
 

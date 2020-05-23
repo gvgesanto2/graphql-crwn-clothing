@@ -1,7 +1,8 @@
 const INITIAL_STATE = {
   cartHidden: true,
   cartItems: [],
-  itemCount: 0
+  itemCount: 0,
+  totalPrice: 0
 }
 
 export default INITIAL_STATE;

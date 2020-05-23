@@ -5,7 +5,7 @@ import AddCartItemMutation from '../../mutations/add-cart-item/add-cart-item.com
 import ClearCartItemMutation from '../../mutations/clear-cart-item/clear-cart-item.component';
 import RemoveCartItemMutation from '../../mutations/remove-cart-item/remove-cart-item.component';
 
-const CheckoutItemContainer = () => {
+const CheckoutItemContainer = ({ cartItem }) => {
   return (
     <AddCartItemMutation>
       {
@@ -18,6 +18,7 @@ const CheckoutItemContainer = () => {
                     removeCartItem => {
                       return (
                         <CheckoutItem 
+                          cartItem={cartItem}
                           addItem={addCartItem}
                           clearItem={clearCartItem}
                           removeItem={removeCartItem}

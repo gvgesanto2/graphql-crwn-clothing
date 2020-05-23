@@ -22,3 +22,9 @@ export const GET_ITEM_COUNT = gql`
     itemCount @client
   }
 `;
+
+export const GET_TOTAL_PRICE = gql`
+  {
+    totalPrice @client
+  }
+`;
