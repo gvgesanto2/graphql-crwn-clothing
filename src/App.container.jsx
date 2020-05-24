@@ -1,22 +1,22 @@
 import React from 'react';
 
 import App from './App';
-import SetCurrentUserMutation from './mutations/set-current-user/set-current-user.component';
 import CurrentUserQuery from './queries/current-user/current-user.component';
+import CheckUserSessionMutation from './mutations/check-user-session/check-user-session.component';
 
 const AppContainer = () => {
   return (
-    <SetCurrentUserMutation>
+    <CheckUserSessionMutation>
       {
-        setCurrentUser => {
+        checkUserSession => {
           return (
             <CurrentUserQuery>
-              <App setCurrentUser={setCurrentUser} />
+              <App checkUserSession={checkUserSession} />
             </CurrentUserQuery>
           );
         } 
       }
-    </SetCurrentUserMutation>
+    </CheckUserSessionMutation>
   );
 }
 
