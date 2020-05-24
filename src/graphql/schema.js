@@ -13,6 +13,18 @@ export const typeDefs = gql`
     size: String
   }
 
+  extend type DateTime {
+    nanoseconds: Int!
+    seconds: Int!
+  }
+  
+  extend type User {
+    id: ID!
+    displayName: String!
+    email: String!
+    createdAt: DateTime!
+  }
+
   extend type Query {
     sections: [Section]!
   }
@@ -22,6 +34,7 @@ export const typeDefs = gql`
     addCartItem(item: Item!): [Item]!
     clearCartItem(item: Item!): [Item]!
     removeCartItem(item: Item!): [Item]!
+    setCurrentUser(user: User): User!
   }
 `;
 

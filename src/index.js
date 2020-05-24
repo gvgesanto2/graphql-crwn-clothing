@@ -9,7 +9,7 @@ import client from './graphql/apollo.client';
 import { store, persistor } from './redux/store';
 
 import './index.css';
-import App from './App';
+import App from './App.container';
 
 ReactDOM.render(
   <ApolloProvider client={client}>
