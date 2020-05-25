@@ -1,36 +1,43 @@
 import React from 'react';
 
 import CheckoutItem from './checkout-item.component';
-import AddCartItemMutation from '../../mutations/add-cart-item/add-cart-item.component';
-import ClearCartItemMutation from '../../mutations/clear-cart-item/clear-cart-item.component';
-import RemoveCartItemMutation from '../../mutations/remove-cart-item/remove-cart-item.component';
+
+import CustomMutation from '../../mutations/custom-mutation/custom-mutation.component';
+
+import { 
+  ADD_ITEM_TO_CART, 
+  CLEAR_ITEM_FROM_CART, 
+  REMOVE_ITEM_FROM_CART 
+} from '../../graphql/cart/cart.mutations';
+
+const modifyCartItems = modifyFunction => item => modifyFunction({ variables: { item }});
 
 const CheckoutItemContainer = ({ cartItem }) => {
   return (
-    <AddCartItemMutation>
+    <CustomMutation mutation={ADD_ITEM_TO_CART}>
       {
         addCartItem =>
-          <ClearCartItemMutation>
+          <CustomMutation mutation={CLEAR_ITEM_FROM_CART}>
             {
               clearCartItem => 
-                <RemoveCartItemMutation>
+                <CustomMutation mutation={REMOVE_ITEM_FROM_CART}>
                   {
                     removeCartItem => {
                       return (
                         <CheckoutItem 
                           cartItem={cartItem}
-                          addItem={addCartItem}
-                          clearItem={clearCartItem}
-                          removeItem={removeCartItem}
+                          addItem={modifyCartItems(addCartItem)}
+                          clearItem={modifyCartItems(clearCartItem)}
+                          removeItem={modifyCartItems(removeCartItem)}
                         />
                       );
                     }
                   }
-                </RemoveCartItemMutation>
+                </CustomMutation>
             }
-          </ClearCartItemMutation>
+          </CustomMutation>
       }
-    </AddCartItemMutation>
+    </CustomMutation>
   );
 }
 

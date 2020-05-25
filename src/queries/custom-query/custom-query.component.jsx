@@ -1,25 +1,22 @@
 import React from 'react';
 import { Query } from 'react-apollo';
 
-import { GET_SECTIONS } from '../../graphql/directory/directory.queries';
 import Spinner from '../../components/spinner/spinner.component';
 
-const SectionsQuery = ({ children }) => {
+const CustomQuery = ({ children, query, variables }) => {
   return (
-    <Query query={GET_SECTIONS}>
+    <Query query={query} variables={variables}>
       {
         ({ loading, error, data }) => {
           if(loading) return <Spinner />;
           if(error) return <p>{error.message}</p>;
 
-          const { sections } = data;
-
           if(typeof children === "function") {
-            return children(sections);
+            return children(data);
           }
-
+          
           return React.Children.map(children, child =>
-            React.cloneElement(child, { sections })
+            React.cloneElement(child, { data })
           );
         }
       }
@@ -27,4 +24,4 @@ const SectionsQuery = ({ children }) => {
   );
 }
 
-export default SectionsQuery;
+export default CustomQuery;

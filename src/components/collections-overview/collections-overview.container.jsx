@@ -1,13 +1,19 @@
 import React from 'react';
 
-import CollectionsQuery from '../../queries/collections/collections.component';
 import CollectionsOverview from './collections-overview.component';
+
+import CustomQuery from '../../queries/custom-query/custom-query.component';
+
+import { GET_COLLECTIONS } from '../../graphql/shop/shop.queries';
 
 const CollectionsOverviewContainer = () => {
   return (
-    <CollectionsQuery>
-      <CollectionsOverview />
-    </CollectionsQuery>
+    <CustomQuery query={GET_COLLECTIONS}>
+      {
+        data =>
+          <CollectionsOverview collections={data.collections} />
+      }
+    </CustomQuery>
   );
 }
 

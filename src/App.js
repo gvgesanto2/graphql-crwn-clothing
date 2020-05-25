@@ -10,8 +10,6 @@ import { default as CheckoutPage } from './pages/checkout/checkout.container';
 
 import { default as Header } from './components/header/header.container';
 
-import { auth, createUserProfileDocument } from './firebase/firebase.utils';
-
 class App extends React.Component {
   unsubscribeFromAuth = null;
 

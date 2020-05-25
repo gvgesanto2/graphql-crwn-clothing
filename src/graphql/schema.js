@@ -34,9 +34,11 @@ export const typeDefs = gql`
     addCartItem(item: Item!): [Item]!
     clearCartItem(item: Item!): [Item]!
     removeCartItem(item: Item!): [Item]!
-    setCurrentUser(user: User): User!
     signInWithGoogle: User
+    signInWithEmail(email: String!, password: String!): User
+    signUp(displayName: String!, email: String!, password: String!): User
     checkUserSession: User
+    signOut: Boolean!
   }
 `;
 

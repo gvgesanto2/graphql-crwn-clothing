@@ -1,24 +1,14 @@
-import { GET_CURRENT_USER } from "./user.queries"
-
 import { 
   auth, 
   googleProvider, 
-  createUserProfileDocument, 
   getCurrentUser 
 } from '../../firebase/firebase.utils';
+
 import { updateCurrentUser } from "./user.utils";
 
 
 const userResolvers = {
   Mutation: {
-    setCurrentUser: (_root, { user }, { cache }) => {
-      cache.writeQuery({
-        query: GET_CURRENT_USER,
-        data: { currentUser: user }
-      });
-
-      return user;
-    },
     signInWithGoogle: async (_root, _args, { cache }) => {
       try {
         const { user } = await auth.signInWithPopup(googleProvider);
@@ -29,6 +19,26 @@ const userResolvers = {
         return null;
       }
     },
+    signInWithEmail: async (_root, { email, password }, { cache }) => {
+      try {
+        const { user } = await auth.signInWithEmailAndPassword(email, password);
+        
+        return await updateCurrentUser(cache, user);
+      } catch (error) {
+        console.log("Error signing in: ", error);
+        return null;
+      }
+    },
+    signUp: async (_root, { displayName, email, password }, { cache }) => {
+      try {
+        const { user } = await auth.createUserWithEmailAndPassword(email, password);
+
+        return await updateCurrentUser(cache, user, { displayName });
+      } catch (error) {
+        console.log("Error signing up: ", error);
+        return null;
+      }
+    },
     checkUserSession: async (_root, _args, { cache }) => {
       try {
         const userAuth = await getCurrentUser();
@@ -36,8 +46,20 @@ const userResolvers = {
 
         return await updateCurrentUser(userAuth);
       } catch (error) {
-        console.log("Error signing in: ", error);
+        console.log("Error checking user session: ", error);
         return null;
+      }
+    },
+    signOut: async (_root, _args, { cache, client }) => {
+      try {
+        await auth.signOut();
+  
+        client.resetStore();
+
+        return true;
+      } catch (error) {
+        console.log("Error signing out: ", error);
+        return false;
       }
     }
   }

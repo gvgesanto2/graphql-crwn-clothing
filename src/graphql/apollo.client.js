@@ -10,8 +10,15 @@ import INITIAL_STATE from './initial-data';
 import Spinner from '../components/spinner/spinner.component';
 import { ApolloProvider } from 'react-apollo';
 
+const writeInitialState = client => {
+  client.writeData({
+    data: INITIAL_STATE
+  });
+}
 
 class ApolloClientProvider extends React.Component {
+  unsubscribe = null;
+  
   state = {
     client: null,
     loaded: false
@@ -32,9 +39,7 @@ class ApolloClientProvider extends React.Component {
     
     client.setResolvers(rootResolver);
     
-    client.writeData({
-      data: INITIAL_STATE
-    });
+    writeInitialState(client);
 
     try {
       await persistCache({
@@ -44,11 +49,17 @@ class ApolloClientProvider extends React.Component {
     } catch (err) {
       console.error('Error restoring Apollo cache', err);
     }
+
+    this.unsubscribe = client.onResetStore(() => writeInitialState(client));
     
     this.setState({
       client,
       loaded: true,
     });
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   render() {

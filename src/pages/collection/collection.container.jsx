@@ -1,18 +1,20 @@
 import React from 'react';
 
-import GetCollectionsByTitleQuery from '../../queries/get-collections-by-title/get-collections-by-title.component';
 import CollectionPage from './collection.component';
+
+import CustomQuery from '../../queries/custom-query/custom-query.component';
+
+import { GET_COLLECTIONS_BY_TITLE } from '../../graphql/shop/shop.queries';
 
 const CollectionPageContainer = ({ match }) => {
   const title = match.params.collectionId;
   return (
-    <GetCollectionsByTitleQuery variables={{ title }}>
+    <CustomQuery query={GET_COLLECTIONS_BY_TITLE} variables={{ title }}>
       {
-        getCollectionsByTitle => {
-          return <CollectionPage collection={getCollectionsByTitle} />;
-        }
+        data => 
+          <CollectionPage collection={data.getCollectionsByTitle} />
       }
-    </GetCollectionsByTitleQuery>
+    </CustomQuery>
   );
 }
 

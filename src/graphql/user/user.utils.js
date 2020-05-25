@@ -1,9 +1,4 @@
-import { 
-  auth, 
-  googleProvider, 
-  createUserProfileDocument, 
-  getCurrentUser 
-} from '../../firebase/firebase.utils';
+import { createUserProfileDocument } from '../../firebase/firebase.utils';
 
 import { GET_CURRENT_USER } from './user.queries';
 
@@ -17,6 +12,7 @@ export const setCurrentUser = (cache, currentUser) => {
 export const getSnapshotFromUserAuth = async (userAuth, additionalData) => {
   try {
     const userRef = await createUserProfileDocument(userAuth, additionalData);
+    
     const userSnapshot = await userRef.get();
     return {
       id: userSnapshot.id,

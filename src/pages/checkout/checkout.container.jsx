@@ -1,19 +1,30 @@
 import React from 'react';
 
 import CheckoutPage from './checkout.component';
-import TotalPriceQuery from '../../queries/total-price/total-price.component';
-import CartItemsQuery from '../../queries/cart-items/cart-items.component';
+
+import CustomQuery from '../../queries/custom-query/custom-query.component';
+
+import { 
+  GET_TOTAL_PRICE, 
+  GET_CART_ITEMS 
+} from '../../graphql/cart/cart.queries';
 
 const CheckoutPageContainer = () => {
   return (
-    <TotalPriceQuery>
+    <CustomQuery query={GET_TOTAL_PRICE}>
       {
-        totalPrice => 
-          <CartItemsQuery>
-            <CheckoutPage total={totalPrice} />
-          </CartItemsQuery>
+        cartPriceData => 
+          <CustomQuery query={GET_CART_ITEMS}>
+            {
+              cartItemsData =>
+                <CheckoutPage 
+                  total={cartPriceData.totalPrice} 
+                  cartItems={cartItemsData.cartItems}
+                />
+            }
+          </CustomQuery>
       }
-    </TotalPriceQuery>
+    </CustomQuery>
   );
 }
 

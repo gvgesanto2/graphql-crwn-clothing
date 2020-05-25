@@ -1,22 +1,29 @@
 import React from 'react';
 
 import App from './App';
-import CurrentUserQuery from './queries/current-user/current-user.component';
-import CheckUserSessionMutation from './mutations/check-user-session/check-user-session.component';
+
+import CustomMutation from './mutations/custom-mutation/custom-mutation.component';
+import CustomQuery from './queries/custom-query/custom-query.component';
+
+import { CHECK_USER_SESSION } from './graphql/user/user.mutations';
+import { GET_CURRENT_USER } from './graphql/user/user.queries';
 
 const AppContainer = () => {
   return (
-    <CheckUserSessionMutation>
+    <CustomMutation mutation={CHECK_USER_SESSION}>
       {
-        checkUserSession => {
-          return (
-            <CurrentUserQuery>
-              <App checkUserSession={checkUserSession} />
-            </CurrentUserQuery>
-          );
-        } 
+        checkUserSession => 
+          <CustomQuery query={GET_CURRENT_USER}>
+            {
+              data =>
+                <App 
+                  checkUserSession={checkUserSession} 
+                  currentUser={data.currentUser}
+                />
+            }
+          </CustomQuery>
       }
-    </CheckUserSessionMutation>
+    </CustomMutation>
   );
 }
 

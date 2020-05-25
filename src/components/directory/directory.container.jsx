@@ -1,13 +1,19 @@
 import React from 'react';
 
 import Directory from './directory.component';
-import SectionsQuery from '../../queries/sections/sections.component';
+
+import CustomQuery from '../../queries/custom-query/custom-query.component';
+
+import { GET_SECTIONS } from '../../graphql/directory/directory.queries';
 
 const DirectoryContainer = () => {
   return (
-    <SectionsQuery>
-      <Directory />
-    </SectionsQuery>
+    <CustomQuery query={GET_SECTIONS}>
+      {
+        data =>
+          <Directory sections={data.sections} />
+      }
+    </CustomQuery>
   );
 }
 
